@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "Asana Assignee Selector",
   "version": "1.0",
-  "description": "Filter tasks in Asana based on the email input",
-  "permissions": ["activeTab", "storage", "scripting"],
+  "description": "Fill in one or more emails to filter the assignee's tasks",
+  "permissions": ["activeTab", "scripting"],
   "host_permissions": ["https://*.asana.com/*"],
   "action": {
     "default_popup": "popup.html"
