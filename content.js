@@ -1,44 +1,56 @@
-let emailArray = [];
-let currentEmailIndex = 0;
+let emailList = [];
+let currentIndex = 0;
 
 function appendNavigationButtons() {
+  logToResultDiv('append navigation buttons');
   const navigationBar = document.querySelector('.PotCustomTabNavigationBar');
   if (!navigationBar) {
     logToResultDiv('can not find navigationBar');
     return;
   }
 
+  const buttonStyle = `
+    color: #FFF;
+    font-size: 14px;
+    padding: 4px 10px;
+    border: 1px solid #565557;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+`;
+
   const prevButton = document.createElement('button');
   prevButton.textContent = 'Prev';
+  prevButton.style.cssText = buttonStyle;
   prevButton.style.marginRight = '10px';
+  prevButton.id = 'aas-prev-button';
   prevButton.addEventListener('click', () => navigateEmails('prev'));
 
   const nextButton = document.createElement('button');
   nextButton.textContent = 'Next';
+  nextButton.style.cssText = buttonStyle;
+  nextButton.id = 'aas-next-button';
   nextButton.addEventListener('click', () => navigateEmails('next'));
 
   navigationBar.appendChild(prevButton);
   navigationBar.appendChild(nextButton);
 
-  const email = emailArray[currentEmailIndex];
-  filterTasks(email)
+  filterTasks(emailList[currentIndex])
     .catch(error => console.error('filterTasks error:', error));
 }
 
 function navigateEmails(direction) {
-  if (!emailArray.length) {
-    logToResultDiv('emailArray is empty');
+  if (!emailList.length) {
+    logToResultDiv('emailList is empty');
     return;
   }
 
   if (direction === 'next') {
-    currentEmailIndex = (currentEmailIndex + 1) % emailArray.length;
+    currentIndex = (currentIndex + 1) % emailList.length;
   } else if (direction === 'prev') {
-    currentEmailIndex = (currentEmailIndex - 1 + emailArray.length) % emailArray.length;
+    currentIndex = (currentIndex - 1 + emailList.length) % emailList.length;
   }
 
-  const email = emailArray[currentEmailIndex];
-  filterTasks(email)
+  filterTasks(emailList[currentIndex])
     .catch(error => console.error('filterTasks error:', error));
 }
 
@@ -51,23 +63,22 @@ function logToResultDiv(message) {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.action === "setEmailArray") {
+  if (request.action === "setEmailList") {
     sendResponse({ received: true });
-    if (!emailArray.length) {
-      emailArray = request.emails.filter(email => email);
-      logToResultDiv('set new emailArray', emailArray);
+
+    if (!emailList.length) {
+      emailList = request.emails;
+      logToResultDiv('set new emailList', emailList);
       appendNavigationButtons(); // add navigation buttons
     } else {
-      emailArray = request.emails.filter(email => email);
-
-      const email = emailArray[currentEmailIndex];
-      logToResultDiv(`currentEmail: ${email}`);
-      filterTasks(email)
+      emailList = request.emails;
+      logToResultDiv(`currentEmail: ${emailList[currentIndex]}`);
+      filterTasks(emailList[currentIndex])
         .catch(error => console.error('filterTasks error:', error));
     }
-    currentEmailIndex = 0;
+    currentIndex = 0;
   } else if (request.action === "filterTasks") {
-    sendResponse({received: true});
+    sendResponse({ received: true });
     filterTasks(request.email)
       .catch(error => console.error('filterTasks error:', error));
   }
@@ -82,7 +93,7 @@ async function filterTasks(email) {
       removeOldFilterButton.click()
     }
   }
-  await new Promise(resolve => setTimeout(resolve, 100));
+  await new Promise(resolve => setTimeout(resolve, 200));
 
   const filterButton = Array.from(document.querySelectorAll('div.SubtleToggleButton')).find(el => el.textContent.trim() === 'Filter');
   if (!filterButton) {
@@ -91,7 +102,7 @@ async function filterTasks(email) {
   }
 
   filterButton.click();
-  await new Promise(resolve => setTimeout(resolve, 100));
+  await new Promise(resolve => setTimeout(resolve, 200));
 
   const addItemButton = document.querySelector('.AddItemButton-button');
   if (!addItemButton) {
@@ -100,7 +111,7 @@ async function filterTasks(email) {
   }
 
   addItemButton.click();
-  await new Promise(resolve => setTimeout(resolve, 100));
+  await new Promise(resolve => setTimeout(resolve, 200));
 
   const assigneeLabel = Array.from(document.querySelectorAll('.AddFilterButtonContainer-label')).find(el => el.textContent.trim() === 'Assignee');
   if (!assigneeLabel) {
@@ -109,7 +120,7 @@ async function filterTasks(email) {
   }
 
   assigneeLabel.click();
-  await new Promise(resolve => setTimeout(resolve, 100));
+  await new Promise(resolve => setTimeout(resolve, 200));
 
   const assigneeInput = document.querySelector('input[data-testid="tokenizer-input"]');
   if (!assigneeInput) {

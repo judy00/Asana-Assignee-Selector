@@ -9,12 +9,12 @@ document.addEventListener('DOMContentLoaded', function() {
     resultDiv.textContent = 'Processing...';
 
     if (inputValue.includes(',')) {
-      const emails = inputValue.split(',').map(email => email.trim());
-      console.log('emails', emails);
-      console.log('type of emails', typeof emails);
+      const emails = inputValue.split(',')
+        .map(email => email.trim())
+        .filter(email => email);
 
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "setEmailArray", emails: emails}, function(response) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: "setEmailList", emails: emails}, function(response) {
           if (chrome.runtime.lastError) {
             console.error('script error:', chrome.runtime.lastError.message);
             resultDiv.textContent = 'Cannot connect to Asana';
