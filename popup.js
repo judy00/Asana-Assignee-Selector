@@ -4,8 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const resultDiv = document.getElementById('result');
   let logs = [];
 
-  displayLogs();
-
   filterButton.addEventListener('click', function() {
     const inputValue = emailInput.value;
     resultDiv.textContent = 'Processing...';
@@ -48,26 +46,14 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   function addLog(message) {
-    console.log('addLog', message);
     logs.push(message);
-    if (logs.length > 100) { // 限制日誌數量為最新的 100 條
+    if (logs.length > 50) {
       logs.shift();
     }
     const logMessage = document.createElement('p');
     logMessage.textContent = message;
     resultDiv.appendChild(logMessage);
-    resultDiv.scrollTop = resultDiv.scrollHeight; // 自動滾動到底部
-  }
-
-  function displayLogs() {
-    console.log('displayLogs', logs);
-    resultDiv.innerHTML = ''; // 清空現有內容
-    logs.forEach(function(log) {
-      const logMessage = document.createElement('p');
-      logMessage.textContent = log;
-      resultDiv.appendChild(logMessage);
-    });
-    resultDiv.scrollTop = resultDiv.scrollHeight; // 自動滾動到底部
+    resultDiv.scrollTop = resultDiv.scrollHeight;
   }
 });
 
