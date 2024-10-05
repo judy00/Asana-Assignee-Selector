@@ -10,10 +10,10 @@ function appendNavigationButtons() {
   }
 
   const buttonStyle = `
-    color: #FFF;
+    color: #8b8b8b;
     font-size: 14px;
     padding: 4px 10px;
-    border: 1px solid #565557;
+    border: 1px solid #4d4d4d;
     border-radius: 6px;
     transition: background-color 0.3s;
 `;
