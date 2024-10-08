@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Asana Assignee Selector",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Fill in one or more emails to filter the assignee's tasks",
   "icons": {
     "128": "images/icon128.png"
