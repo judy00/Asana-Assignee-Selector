@@ -72,11 +72,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       appendNavigationButtons(); // add navigation buttons
     } else {
       emailList = request.emails;
+      currentIndex = 0;
       logToResultDiv(`currentEmail: ${emailList[currentIndex]}`);
       filterTasks(emailList[currentIndex])
         .catch(error => console.error('filterTasks error:', error));
     }
-    currentIndex = 0;
   } else if (request.action === "filterTasks") {
     sendResponse({ received: true });
     filterTasks(request.email)
